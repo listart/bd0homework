@@ -1,3 +1,14 @@
+# MacOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# IDEA
+.idea/
+*.iml
+output/
+
+# Maven
 target/
 pom.xml.tag
 pom.xml.releaseBackup
