@@ -159,10 +159,9 @@ Scan Student{rowKey='30000000001202', name='Jack', id='20210000000003', classNum
 Scan Student{rowKey='40000000001202', name='Rose', id='20210000000004', classNum=2, understandingScore=60, programmingScore=61}
 
 Process finished with exit code 0
-
-
+```
 
 ## 参考资料
 
 1. [Client configuration and dependencies connecting to an HBase cluster](https://hbase.apache.org/book.html#client_dependencies) by Apache HBase Reference Guide
-2. [Apache Hbase APIs and Examples](https://hbase.apache.org/book.html#hbase_apis) by Apache HBase Reference Guide
+2. [Apache Hbase APIs and Examples](https://hbase.apache.org/book.html#hbase_apis) by Apache HBase Reference Guide
