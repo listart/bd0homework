@@ -6,4 +6,5 @@
 
 1. 0711 [MapReduce 编程作业](flowstat-mr)
 2. 0718 [Hadoop RPC](hadoop-rpc)
+3. 0725 [HBase 编程实践](hbase-demo)
 

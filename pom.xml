@@ -12,12 +12,17 @@
     <modules>
         <module>flowstat-mr</module>
         <module>hadoop-rpc</module>
+        <module>hbase-demo</module>
     </modules>
 
     <properties>
-        <maven.compiler.source>7</maven.compiler.source>
-        <maven.compiler.target>7</maven.compiler.target>
+        <maven.compiler.source>8</maven.compiler.source>
+        <maven.compiler.target>8</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
         <hadoop.client.version>2.7.3</hadoop.client.version>
+        <hbase.client.version>2.1.0</hbase.client.version>
     </properties>
 
     <dependencyManagement>
@@ -26,6 +31,11 @@
                 <groupId>org.apache.hadoop</groupId>
                 <artifactId>hadoop-client</artifactId>
                 <version>${hadoop.client.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.hbase</groupId>
+                <artifactId>hbase-client</artifactId>
+                <version>${hbase.client.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
