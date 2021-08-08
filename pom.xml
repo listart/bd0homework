@@ -13,6 +13,7 @@
         <module>flowstat-mr</module>
         <module>hadoop-rpc</module>
         <module>hbase-demo</module>
+        <module>geek-file-format-hive</module>
     </modules>
 
     <properties>
@@ -23,22 +24,58 @@
 
         <hadoop.client.version>2.7.3</hadoop.client.version>
         <hbase.client.version>2.1.0</hbase.client.version>
+        <hive.version>2.1.1</hive.version>
+        <junit.version>4.12</junit.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
             <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>${junit.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
                 <groupId>org.apache.hadoop</groupId>
                 <artifactId>hadoop-client</artifactId>
                 <version>${hadoop.client.version}</version>
             </dependency>
+
             <dependency>
                 <groupId>org.apache.hbase</groupId>
                 <artifactId>hbase-client</artifactId>
                 <version>${hbase.client.version}</version>
             </dependency>
+
+            <dependency>
+                <groupId>org.apache.hive</groupId>
+                <artifactId>hive-exec</artifactId>
+                <version>${hive.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
+
+<!--    <repositories>-->
+<!--        <repository>-->
+<!--            <id>cloudera-repos</id>-->
+<!--            <name>cloudera-repos</name>-->
+<!--            <url>https://repository.cloudera.com/artifactory/repo</url>-->
+<!--            <releases>-->
+<!--                <enabled>true</enabled>-->
+<!--            </releases>-->
+<!--            <snapshots>-->
+<!--                <enabled>false</enabled>-->
+<!--            </snapshots>-->
+<!--        </repository>-->
+<!--    </repositories>-->
+    <repositories>
+        <repository>
+            <id>spring</id>
+            <url>https://maven.aliyun.com/repository/spring</url>
+        </repository>
+    </repositories>
 
     <build>
         <finalName>${project.groupId}-${project.artifactId}-${project.version}</finalName>
