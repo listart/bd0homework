@@ -2,6 +2,7 @@ package listart
 
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.fs.{FileSystem, FileUtil, Path}
+import org.apache.log4j.Logger
 import org.apache.spark.{SparkConf, SparkContext}
 
 import scala.annotation.tailrec
@@ -67,13 +68,14 @@ object SparkDistCP {
       }
   }
 
-  def copyFile(fs: FileSystem, srcPath: Path, dstPath: Path, partition: Int, relativePath: String):String = {
+  def copyFile(fs: FileSystem, srcPath: String, dstPath: String, partition: Int, relativePath: String):String = {
     val src = s"$srcPath/$relativePath"
     val dst = s"$dstPath/$relativePath"
 
-    FileUtil.copy(fs, new Path(src), fs, new Path(dst), false, true, fs.getConf)
+    val logger = Logger.getLogger("SparkDistCP")
+    logger.info(s"[$partition] cp $src $dst")
 
-    println(s"[$partition] cp $src $dst")
+    FileUtil.copy(fs, new Path(src), fs, new Path(dst), false, true, fs.getConf)
 
     dst
   }
@@ -98,6 +100,7 @@ object SparkDistCP {
       exit(1)
     }
     val srcPath = fs.getFileStatus(new Path(srcDir)).getPath
+    val source = srcPath.toString
 
     // check target directory
     if (!fs.exists(new Path(dstDir))) {
@@ -110,6 +113,7 @@ object SparkDistCP {
       exit(1)
     }
     val dstPath = fs.getFileStatus(new Path(dstDir)).getPath
+    val target = dstPath.toString
 
     // list all sub directories of source directory
     val allDirs = listDirectories(fs, srcPath, srcPath)
@@ -138,9 +142,12 @@ object SparkDistCP {
     sc.makeRDD(fileList.toSeq, maxConcurrence)
       .mapPartitionsWithIndex {
         case (partition, files) =>
-          files.map( file =>
-            copyFile(fs, srcPath, dstPath, partition, file)
-          )
+          files.map(file => {
+            val fs = getFileSystem()
+            println(file)
+            copyFile(fs, source, target, partition, file)
+            fs.close()
+          })
       }
 
     fs.close()
