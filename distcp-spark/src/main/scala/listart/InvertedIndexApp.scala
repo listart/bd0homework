@@ -22,10 +22,10 @@ object InvertedIndexApp {
         .map((line(0), _))) // (path, word)
       .map((_, 1))  // (path, word) => ((path, word), 1)
       .reduceByKey(_+_)
-      .map({case ((p, w), n) => (w, (p, n))}) // ((path, word), num) => (word, (path, num))
+      .map {case ((p, w), n) => (w, (p, n))} // ((path, word), num) => (word, (path, num))
       .groupByKey()
       .sortByKey()
-      .map({case (w, seq) => "\"" + w + "\":\t" + seq.toList.sorted.mkString("{", ", ", "}")})
+      .map {case (w, seq) => "\"" + w + "\":\t" + seq.toList.sorted.mkString("{", ", ", "}")}
 
     rdd.saveAsTextFile(output)
 
