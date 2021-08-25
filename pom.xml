@@ -14,6 +14,7 @@
         <module>hadoop-rpc</module>
         <module>hbase-demo</module>
         <module>geek-file-format-hive</module>
+        <module>distcp-spark</module>
     </modules>
 
     <properties>
@@ -22,10 +23,17 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
+        <scala.version>2.12.14</scala.version>
+        <scala.compat.version>2.12.14</scala.compat.version>
+        <scala.binary.version>2.12</scala.binary.version>
+
         <hadoop.client.version>2.7.3</hadoop.client.version>
         <hbase.client.version>2.1.0</hbase.client.version>
         <hive.version>2.1.1</hive.version>
+        <spark.version>3.1.2</spark.version>
+
         <junit.version>4.12</junit.version>
+        <specs.version>1.2.5</specs.version>
     </properties>
 
     <dependencyManagement>
@@ -53,6 +61,23 @@
                 <groupId>org.apache.hive</groupId>
                 <artifactId>hive-exec</artifactId>
                 <version>${hive.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.spark</groupId>
+                <artifactId>spark-core_${scala.binary.version}</artifactId>
+                <version>${spark.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.scala-lang</groupId>
+                <artifactId>scala-library</artifactId>
+                <version>${scala.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.specs</groupId>
+                <artifactId>specs</artifactId>
+                <version>${specs.version}</version>
+                <scope>test</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>
