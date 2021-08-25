@@ -29,6 +29,6 @@ object InvertedIndexApp {
 
     rdd.saveAsTextFile(output)
 
-    println(rdd.collect().mkString("Array(", ", ", ")"))
+    println(rdd.collect() mkString "\n")
   }
 }

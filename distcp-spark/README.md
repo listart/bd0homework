@@ -16,6 +16,8 @@
 
 源码见 [listart.InvertedIndexApp#main](src/main/scala/listart/InvertedIndexApp.scala)
 
+![image-20210825120732602](images/README/image-20210825120732602.png)
+
 输入文件 `distcp-spark/input/data`
 
 ```
