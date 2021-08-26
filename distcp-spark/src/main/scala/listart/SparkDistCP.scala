@@ -2,7 +2,6 @@ package listart
 
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.fs.{FileSystem, FileUtil, Path}
-import org.apache.log4j.Logger
 import org.apache.spark.{SparkConf, SparkContext}
 
 import scala.annotation.tailrec
@@ -26,12 +25,12 @@ object SparkDistCP {
       case "-i" :: tail => getOpt(map ++ Map('ignoreFailures -> true), tail)
       case "-m" :: value :: tail => getOpt(map ++ Map('maxConcurrence -> value.toInt), tail)
       case sourceDir :: targetDir :: Nil => map ++ Map('sourceDir -> sourceDir, 'targetDir -> targetDir)
-      case option :: tail => println(s"Unknown option $option")
+      case option :: _ => println(s"Unknown option $option")
         exit(1)
     }
   }
 
-  def getFileSystem(): FileSystem = {
+  def getFileSystem: FileSystem = {
     val conf = new Configuration()
     conf.addResource(new Path("/opt/hadoop/etc/hadoop/core-site.xml"))
 
@@ -68,18 +67,6 @@ object SparkDistCP {
       }
   }
 
-  def copyFile(fs: FileSystem, srcPath: String, dstPath: String, partition: Int, relativePath: String):String = {
-    val src = s"$srcPath/$relativePath"
-    val dst = s"$dstPath/$relativePath"
-
-    val logger = Logger.getLogger("SparkDistCP")
-    logger.info(s"[$partition] cp $src $dst")
-
-    FileUtil.copy(fs, new Path(src), fs, new Path(dst), false, true, fs.getConf)
-
-    dst
-  }
-
   def main(args: Array[String]): Unit = {
     if (args.length < 3) {
       println(usage)
@@ -94,7 +81,7 @@ object SparkDistCP {
     println(s"accepts arguments $opts")
 
     // check source directory
-    val fs = getFileSystem()
+    val fs = getFileSystem
     if (!fs.exists(new Path(srcDir))) {
       println(s"not exists source directory $srcDir")
       exit(1)
@@ -137,20 +124,41 @@ object SparkDistCP {
 
     val fileList = getFileList(fs, srcDir)
 
-    val conf = new SparkConf().setMaster("local").setAppName("Inverted Index")
-    val sc = new SparkContext(conf)
-    sc.makeRDD(fileList.toSeq, maxConcurrence)
-      .mapPartitionsWithIndex {
-        case (partition, files) =>
-          files.map(file => {
-            val fs = getFileSystem()
-            println(file)
-            copyFile(fs, source, target, partition, file)
-            fs.close()
-          })
-      }
-
     fs.close()
+
+    println(fileList mkString "\n")
+    println(s"maxConcurrence : $maxConcurrence")
+
+    val conf = new SparkConf().setMaster("local").setAppName("SparkDistCP")
+    val sc = new SparkContext(conf)
+
+    val rdd = sc.makeRDD(fileList.toSeq, maxConcurrence)
+
+    val results = rdd.mapPartitionsWithIndex {
+      (partition, files) => {
+        val output = new ListBuffer[String]
+
+        val conf = new Configuration()
+        conf.addResource(new Path("/opt/hadoop/etc/hadoop/core-site.xml"))
+        val fs = FileSystem.get(conf)
+
+        while (files.hasNext) {
+          val file = files.next()
+          val src = s"$source/$file"
+          val dst = s"$target/$file"
+
+          val success = FileUtil.copy(fs, new Path(src), fs, new Path(dst), false, true, conf)
+
+          output += s"[$partition] cp $src $dst : $success"
+        }
+
+        fs.close()
+
+        output.iterator
+      }
+    }.collect()
+
+    println(s"tasks:\n${results mkString "\n"}")
 
     //    testGetOpt()
   }
