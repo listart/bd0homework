@@ -15,6 +15,7 @@
         <module>hbase-demo</module>
         <module>geek-file-format-hive</module>
         <module>distcp-spark</module>
+        <module>extension-spark-sql</module>
     </modules>
 
     <properties>
@@ -68,6 +69,14 @@
                 <artifactId>spark-core_${scala.binary.version}</artifactId>
                 <version>${spark.version}</version>
             </dependency>
+
+            <dependency>
+                <groupId>org.apache.spark</groupId>
+                <artifactId>spark-sql_${scala.binary.version}</artifactId>
+                <version>${spark.version}</version>
+                <scope>provided</scope>
+            </dependency>
+
             <dependency>
                 <groupId>org.scala-lang</groupId>
                 <artifactId>scala-library</artifactId>
