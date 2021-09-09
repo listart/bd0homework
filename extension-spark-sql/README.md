@@ -95,11 +95,32 @@
 
 代码列表
 
-[MyPushDown.scala](src/main/scala/listart/MyPushDown.scala)
+- [MyPushDown.scala](src/main/scala/listart/MyPushDown.scala)
 
-[MySparkSessionExtension.scala](src/main/scala/listart/MySparkSessionExtension.scala)
+- [MySparkSessionExtension.scala](src/main/scala/listart/MySparkSessionExtension.scala)
 
 
+
+运行过程
+
+- 启动 spark-sql
+
+  ```shell
+  bin/spark-sql -S --jars listart-extension-spark-sql-1.0-SNAPSHOT.jar --conf spark.sql.extensions=listart.MySparkSessionExtension
+  ```
+
+- spark-sql 内
+
+  ```shell
+  set spark.sql.planChangeLog.level=WARN;
+  select id from (select id,age from student) where id > 10;
+  ```
+
+  运行截图
+
+  ![image-20210909125626011](images/README/image-20210909125626011.png)
+
+  
 
 # 参考资料
 
