@@ -12,7 +12,7 @@
 
 解决方法：如下图，将生成目录 Mark Directory as -> Generated Sources Root
 
-![截屏2021-09-08 上午11.37.40](images/README/截屏2021-09-08 上午11.37.40.png)
+![mark-directory-as-generated-sources-dir](images/README/mark-directory-as-generated-sources-dir.png)
 
 
 
