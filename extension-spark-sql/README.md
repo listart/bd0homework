@@ -16,15 +16,31 @@
 
 
 
+## 编译jar包总出错
+
+- 原本模块使用的 **org.scala-tools.archetypes:scala-archetype-simple** 创建，使用的maven plugins包括 ***org.scala-tools:maven-scala-plugin*** ***org.apache.maven.plugins:maven-eclipse-plugin*** 及 ***org.specs:specs*** 依赖 都非常老，即使加上 ***org.scala-tools:maven-scala-plugin:2.15.2*** ***org.apache.maven.plugins:maven-eclipse-plugin:2.10*** 依赖，mvn package 时也会有出现各种问题。
+
+  解决思路：直接将 **spark 3.1.2** 源码 **parent pom** 中的 ***net.alchim31.maven:scala-maven-plugin:4.3.0*** 和 ***org.apache.maven.plugins:maven-compiler-plugin:3.8.1*** 替换到模块。
+
+- `mvn package` 时，***com.github.ghik:silencer-plugin_2.12.14:1.6.0*** 依赖缺失：
+
+  到mvnrespository.com查看发现，***scala 2.12.14*** 版本较新，仅 `1.7.5` 版本支持，如下图所示。
+
+  ![image-20210909113701408](images/README/image-20210909113701408.png)
+
+  切换版本后，编译通过。
+
+
+
 # 输出
 
 ## 第一题 Spark SQL 自定义命令
 
 代码列表
 
-- [SqlBase.g4](src/main/antlr4/org/apache/spark/sql/catalyst/parser/SqlBase.g4)
-- [SparkSqlParser.scala](src/main/scala/org/apache/spark/sql/execution/SparkSqlParser.scala)
-- [ShowVersionCommand.scala](src/main/scala/org/apache/spark/sql/execution/command/ShowVersionCommand.scala)
+- [SqlBase.g4](todo/antlr4/org/apache/spark/sql/catalyst/parser/SqlBase.g4)
+- [SparkSqlParser.scala](todo/scala/org/apache/spark/sql/execution/SparkSqlParser.scala)
+- [ShowVersionCommand.scala](todo/scala/org/apache/spark/sql/execution/command/ShowVersionCommand.scala)
 
 ![image-20210908112950787](images/README/image-20210908112950787.png)
 

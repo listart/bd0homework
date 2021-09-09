@@ -21,8 +21,9 @@
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <encoding>UTF-8</encoding>
+        <!--        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>-->
+        <!--        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>-->
 
         <scala.version>2.12.14</scala.version>
         <scala.compat.version>2.12.14</scala.compat.version>
@@ -31,7 +32,9 @@
         <hadoop.client.version>2.7.3</hadoop.client.version>
         <hbase.client.version>2.1.0</hbase.client.version>
         <hive.version>2.1.1</hive.version>
+
         <spark.version>3.1.2</spark.version>
+        <CodeCacheSize>1g</CodeCacheSize>
 
         <junit.version>4.12</junit.version>
         <specs.version>1.2.5</specs.version>
@@ -74,7 +77,6 @@
                 <groupId>org.apache.spark</groupId>
                 <artifactId>spark-sql_${scala.binary.version}</artifactId>
                 <version>${spark.version}</version>
-                <scope>provided</scope>
             </dependency>
 
             <dependency>
@@ -82,6 +84,7 @@
                 <artifactId>scala-library</artifactId>
                 <version>${scala.version}</version>
             </dependency>
+
             <dependency>
                 <groupId>org.specs</groupId>
                 <artifactId>specs</artifactId>
@@ -91,28 +94,98 @@
         </dependencies>
     </dependencyManagement>
 
-<!--    <repositories>-->
-<!--        <repository>-->
-<!--            <id>cloudera-repos</id>-->
-<!--            <name>cloudera-repos</name>-->
-<!--            <url>https://repository.cloudera.com/artifactory/repo</url>-->
-<!--            <releases>-->
-<!--                <enabled>true</enabled>-->
-<!--            </releases>-->
-<!--            <snapshots>-->
-<!--                <enabled>false</enabled>-->
-<!--            </snapshots>-->
-<!--        </repository>-->
-<!--    </repositories>-->
-    <repositories>
-        <repository>
-            <id>spring</id>
-            <url>https://maven.aliyun.com/repository/spring</url>
-        </repository>
-    </repositories>
-
     <build>
         <finalName>${project.groupId}-${project.artifactId}-${project.version}</finalName>
+
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>net.alchim31.maven</groupId>
+                    <artifactId>scala-maven-plugin</artifactId>
+                    <version>4.3.0</version>
+                    <executions>
+                        <execution>
+                            <id>eclipse-add-source</id>
+                            <goals>
+                                <goal>add-source</goal>
+                            </goals>
+                        </execution>
+                        <execution>
+                            <id>scala-compile-first</id>
+                            <goals>
+                                <goal>compile</goal>
+                            </goals>
+                        </execution>
+                        <execution>
+                            <id>scala-test-compile-first</id>
+                            <goals>
+                                <goal>testCompile</goal>
+                            </goals>
+                        </execution>
+                        <execution>
+                            <id>attach-scaladocs</id>
+                            <phase>verify</phase>
+                            <goals>
+                                <goal>doc-jar</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                    <configuration>
+                        <scalaVersion>${scala.version}</scalaVersion>
+                        <checkMultipleScalaVersions>true</checkMultipleScalaVersions>
+                        <failOnMultipleScalaVersions>true</failOnMultipleScalaVersions>
+                        <recompileMode>incremental</recompileMode>
+                        <args>
+                            <arg>-unchecked</arg>
+                            <arg>-deprecation</arg>
+                            <arg>-feature</arg>
+                            <arg>-explaintypes</arg>
+                            <arg>-target:jvm-1.8</arg>
+                            <arg>-Xfatal-warnings</arg>
+                            <arg>-Ywarn-unused:imports</arg>
+                            <arg>-P:silencer:globalFilters=.*deprecated.*</arg>
+                        </args>
+                        <jvmArgs>
+                            <jvmArg>-Xms1024m</jvmArg>
+                            <jvmArg>-Xmx1024m</jvmArg>
+                            <jvmArg>-XX:ReservedCodeCacheSize=${CodeCacheSize}</jvmArg>
+                        </jvmArgs>
+                        <javacArgs>
+                            <javacArg>-source</javacArg>
+                            <javacArg>${java.version}</javacArg>
+                            <javacArg>-target</javacArg>
+                            <javacArg>${java.version}</javacArg>
+                            <javacArg>-Xlint:all,-serial,-path,-try</javacArg>
+                        </javacArgs>
+                        <compilerPlugins>
+                            <compilerPlugin>
+                                <groupId>com.github.ghik</groupId>
+                                <artifactId>silencer-plugin_${scala.version}</artifactId>
+                                <version>1.7.5</version>
+                            </compilerPlugin>
+                        </compilerPlugins>
+                    </configuration>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.8.1</version>
+                    <configuration>
+                        <source>${java.version}</source>
+                        <target>${java.version}</target>
+                        <skipMain>true</skipMain> <!-- skip compile -->
+                        <skip>true</skip> <!-- skip testCompile -->
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
     </build>
 
+<!--    <repositories>-->
+<!--        <repository>-->
+<!--            <id>spring</id>-->
+<!--            <url>https://maven.aliyun.com/repository/spring</url>-->
+<!--        </repository>-->
+<!--    </repositories>-->
 </project>
