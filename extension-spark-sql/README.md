@@ -106,7 +106,9 @@
 - 启动 spark-sql
 
   ```shell
-  bin/spark-sql -S --jars listart-extension-spark-sql-1.0-SNAPSHOT.jar --conf spark.sql.extensions=listart.MySparkSessionExtension
+  bin/spark-sql -S \
+  --jars listart-extension-spark-sql-1.0-SNAPSHOT.jar \
+  --conf spark.sql.extensions=listart.MySparkSessionExtension
   ```
 
 - spark-sql 内
