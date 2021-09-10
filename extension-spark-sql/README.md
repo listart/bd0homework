@@ -32,6 +32,25 @@
 
 
 
+## 报Error in query错
+
+Spark SQL extension 打包以后，总是报下图错误：
+
+![image-20210910114825283](images/README/image-20210910114825283.png)
+
+发现遗漏了 Antlr4 解析入口处理 visitSingleStatement，加上以下代码后运行正常。
+
+```scala
+class MySqlAstBuilder extends MySqlBaseBaseVisitor[AnyRef] {
+  override def visitSingleStatement(ctx: SingleStatementContext): LogicalPlan = withOrigin(ctx) {
+    visit(ctx.statement).asInstanceOf[LogicalPlan]
+  } 
+  ...
+}
+```
+
+
+
 # 输出
 
 ## 第一题 Spark SQL 自定义命令
