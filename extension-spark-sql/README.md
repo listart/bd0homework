@@ -36,13 +36,30 @@
 
 ## 第一题 Spark SQL 自定义命令
 
-代码列表
+在课堂上直接修改 Spark Code 的基础上，参考 ***Delta Lake*** 相关代码，以扩展 `injectParser` 方式实现 ***Spark SQL*** 的 `show version` 命令扩展。
 
-- [SqlBase.g4](todo/antlr4/org/apache/spark/sql/catalyst/parser/SqlBase.g4)
-- [SparkSqlParser.scala](todo/scala/org/apache/spark/sql/execution/SparkSqlParser.scala)
-- [ShowVersionCommand.scala](todo/scala/org/apache/spark/sql/execution/command/ShowVersionCommand.scala)
+> - [io.delta.sql.parser.DeltaSqlParser](https://github.com/delta-io/delta/blob/master/core/src/main/scala/io/delta/sql/parser/DeltaSqlParser.scala) DeltaLake Spark SQL Parser 代码参考
+>
+> - [antlr4/io/delta/sql/parser/DeltaSqlBase.g4](https://github.com/delta-io/delta/blob/master/core/src/main/antlr4/io/delta/sql/parser/DeltaSqlBase.g4) DeltaLake Antlr4 g4 定义参考
 
-![image-20210908112950787](images/README/image-20210908112950787.png)
+代码列表：
+
+- Antlr4 语法定义文件：[MySqlBase.g4](src/main/antlr4/listart/parser/MySqlBase.g4)
+- Spark SQL 扩展点：[listart.MySparkSessionExtension](src/main/scala/listart/MySparkSessionExtension.scala)
+- Spark SQL Parser 扩展实现： [listart.parser.MySqlParser](src/main/scala/listart/parser/MySqlParser.scala)
+- show version 命令实现：[listart.command.ShowVersionCommand](src/main/scala/listart/command/ShowVersionCommand.scala)
+
+执行命令
+
+```shell
+bin/spark-sql -S \
+--jars listart-extension-spark-sql-1.0-SNAPSHOT.jar \
+--conf spark.sql.extensions=listart.MySparkSessionExtension
+```
+
+执行结果
+
+![image-20210910111152848](images/README/image-20210910111152848.png)
 
 
 
@@ -127,5 +144,8 @@
 # 参考资料
 
 1. [Writing custom optimization in Apache Spark SQL - custom parser](https://www.waitingforcode.com/apache-spark-sql/writing-custom-optimization-apache-spark-sql-custom-parser/read) AUGUST 15, 2019, BARTOSZ KONIECZNY
-2. [Spark SQL operator optimizations - part 1](https://www.waitingforcode.com/apache-spark-sql/spark-sql-operator-optimizations-part-1/read) OCTOBER 14, 2017, BARTOSZ KONIECZNY
+2. [How to Extend Apache Spark with Customized Optimizations](https://www.slideshare.net/databricks/how-to-extend-apache-spark-with-customized-optimizations) from Databricks
+3. [Spark SQL operator optimizations - part 1](https://www.waitingforcode.com/apache-spark-sql/spark-sql-operator-optimizations-part-1/read) OCTOBER 14, 2017, BARTOSZ KONIECZNY
+4. [io.delta.sql.parser.DeltaSqlParser](https://github.com/delta-io/delta/blob/master/core/src/main/scala/io/delta/sql/parser/DeltaSqlParser.scala) DeltaLake Spark SQL Parser 代码参考
+5. [antlr4/io/delta/sql/parser/DeltaSqlBase.g4](https://github.com/delta-io/delta/blob/master/core/src/main/antlr4/io/delta/sql/parser/DeltaSqlBase.g4) DeltaLake Antlr4 g4 定义参考
 

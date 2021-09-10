@@ -19,11 +19,11 @@
     </modules>
 
     <properties>
-        <maven.compiler.source>8</maven.compiler.source>
-        <maven.compiler.target>8</maven.compiler.target>
-        <encoding>UTF-8</encoding>
-        <!--        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>-->
-        <!--        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>-->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <java.version>1.8</java.version>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
 
         <scala.version>2.12.14</scala.version>
         <scala.compat.version>2.12.14</scala.compat.version>
@@ -34,6 +34,7 @@
         <hive.version>2.1.1</hive.version>
 
         <spark.version>3.1.2</spark.version>
+        <antlr4.version>4.8-1</antlr4.version>
         <CodeCacheSize>1g</CodeCacheSize>
 
         <junit.version>4.12</junit.version>
@@ -77,6 +78,12 @@
                 <groupId>org.apache.spark</groupId>
                 <artifactId>spark-sql_${scala.binary.version}</artifactId>
                 <version>${spark.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.antlr</groupId>
+                <artifactId>antlr4-runtime</artifactId>
+                <version>${antlr4.version}</version>
             </dependency>
 
             <dependency>
@@ -177,6 +184,12 @@
                         <skipMain>true</skipMain> <!-- skip compile -->
                         <skip>true</skip> <!-- skip testCompile -->
                     </configuration>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.antlr</groupId>
+                    <artifactId>antlr4-maven-plugin</artifactId>
+                    <version>${antlr4.version}</version>
                 </plugin>
             </plugins>
         </pluginManagement>
